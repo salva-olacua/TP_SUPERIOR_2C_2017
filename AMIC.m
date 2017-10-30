@@ -6,8 +6,9 @@ clear;
 
 function cargarDatos
   %cargar los datos!!!
-  display('formato de carga (x,f(x))');
-  n=input('ingrese un numero: ');
+  display('formato de carga x=[ X0,X1,X2,...,Xn], y=[f(X0),f(X1),f(X2),...,f(Xn)]');
+  x=input('x= ');
+  y=input('y= ');
   display('datos cargados'); 
 endfunction
 
@@ -35,8 +36,6 @@ function menuDeOpciones
 endfunction
 
 
-menuDeOpciones();
-
 
 
 function menuDeAproximaciones
@@ -51,18 +50,21 @@ while(true)
     "6. Volver al menu de opciones .");
   switch (opcion)
     case 1
-     opcion1(transfer)
+     opcion1()
     case 2
-     opcion2(transfer)
+     opcion2()
     case 3
-     opcion3(transfer)
+     opcion3()
     case 4
-     opcion4(transfer)
+     opcion4()
     case 5
-     opcion5(transfer)
+     opcion5()
     case 6
      break;
   endswitch
 endwhile
 
 endfunction
+
+
+menuDeOpciones();
