@@ -1,3 +1,9 @@
+global datosXs;
+global datosYs;
+global opcion;
+global opcion2;
+
+
 pkg load control;
 pkg load signal;
 
@@ -18,35 +24,15 @@ function compararAproximaciones
   display('comparacion de aproximaciones');
 endfunction
 
-
-function menuDeOpciones
-  %disp("Ingresar datos para la aproximacion")
- while(true)
-  opcion = menu ("menu de opciones", "Cargar Datos", "Comparar Aproximaciones","Finalizar");
-    switch (opcion)
-      case 1
-        cargarDatos();
-        menuDeAproximaciones();
-      case 2
-        compararAproximaciones();
-      case 3
-        break;
-    endswitch
- endwhile
-endfunction
-
-
-
-
 function menuDeAproximaciones
   
 while(true)
   opcion = menu ("Aproximar mediante: ",
-    "1. Recta de m韓imos cuadrados: y = ax+b.",
-    "2. Par醔ola de m韓imos cuadrados: y = ax^2+bx+c.",
-    "3. Aproximaci髇 Exponencial: y = be^ax.",
-    "4. Aproximaci髇 Potencial: y = bx^a .",
-    "5. Aproximaci髇 Hip閞bola: y = a/x+b .",
+    "1. Recta de m铆nimos cuadrados: y = ax+b.",
+    "2. Par谩bola de m铆nimos cuadrados: y = ax^2+bx+c.",
+    "3. Aproximaci贸n Exponencial: y = be^ax.",
+    "4. Aproximaci贸n Potencial: y = bx^a .",
+    "5. Aproximaci贸n Hip茅rbola: y = a/x+b .",
     "6. Volver al menu de opciones .");
   switch (opcion)
     case 1
@@ -67,4 +53,61 @@ endwhile
 endfunction
 
 
-menuDeOpciones();
+eleccion_1=listdlg("Name","AMIC","ListSize", [500 500],"ListString",{"Cargar Datos","Comparar Aproximaciones"},"SelectionMode","Single","CancelString","Finalizar");
+
+switch(eleccion_1)
+  case 1 %cargarDatos
+    global opcion;
+    global datosXs;
+    global datosYs;
+    msgbox("Ingrese la misma cantidad de valores de Xs que de Ys, separados por espacios");
+    coefnum=inputdlg("Ingresar Xs","AMIC");
+    coefden=inputdlg("Ingresar Ys","AMIC");
+    opcion=1;
+   case 2 %compararAproximaciones
+     
+    otherwise
+    quit;
+endswitch
+
+ if(opcion==1)  
+  msgbox("Elegir expresion aproximante");
+  
+  eleccion_2=listdlg("Name","AMIC","ListSize", [500 500],"ListString",{"Recta de minimos cuadrados: y = ax+b","Parabola de minimos cuadrados: y = ax^2+bx+c","Aproximacion Exponencial: y = be^ax","Aproximacion Potencial: y = bx^a","Aproximacion Hiperbola: y = a/x+b"},"SelectionMode","Single");
+  switch(eleccion_2)
+  case 1 %Recta de m铆nimos cuadrados: y = ax+b
+    global opcion2;
+    opcion2 = 1;
+    
+  case 2 %Par谩bola de m铆nimos cuadrados: y = ax^2+bx+c
+    global opcion2;
+    opcion2 = 2;    
+  case 3 %Aproximaci贸n Exponencial: y = be^ax
+    global opcion2;
+    opcion2 = 3;    
+  case 4 %Aproximaci贸n Potencial: y = bx^a
+    global opcion2;
+    opcion2 = 4;  
+  case 5 %Aproximaci贸n Hip茅rbola: y = a/x+b
+    global opcion2;
+    opcion2 = 5;    
+    otherwise
+    quit;
+endswitch
+
+ elseif(opcion==2) %compararAproximaciones
+ 
+ endif
+ 
+  eleccion_3=listdlg("Name","AMIC","ListSize", [500 500],"ListString",{"Mostrar la funcion aproximante","Obtener el detalle del calculo", "Graficar la nube de puntos junto al polinomio encontrado"},"SelectionMode","Single","CancelString","Finalizar");
+ switch(eleccion_3)
+  
+  case 1 %Mostrar la funci贸n aproximante
+
+  case 2 %Obtener el detalle del c谩lculo
+    
+  case 3 %Graficar la nube de puntos junto al polinomio encontrado
+   
+    otherwise
+    quit;
+endswitch
