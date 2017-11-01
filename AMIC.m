@@ -95,9 +95,11 @@ function [a,b,c]=aproximacionPorCuadratica(x,y)
   matrix_coeficientes = [sumatoria_x_al_cuadrado,sumatoria_x;sumatoria_x,cantidad_x];
   matrix_constantes = [sumatoria_x_lny,sumatoria_lny];
  matrix_resultante= matrix_constantes / matrix_coeficientes;
-  a=matrix_resultante(1,1);
-  b=matrix_resultante(1,2);
- 
+  A=matrix_resultante(1,1);
+  B=matrix_resultante(1,2);
+  
+  a=A;
+  b=e^B;
  endfunction  
 
  %[1,1.2,2,2.5,2.9]
@@ -116,10 +118,11 @@ function [a,b,c]=aproximacionPorCuadratica(x,y)
     
     matrix_resultante= matrix_constantes / matrix_coeficientes;
     
-    a=matrix_resultante(1,1);
-    b=matrix_resultante(1,2);
+    A=matrix_resultante(1,1);
+    B=matrix_resultante(1,2);
     
-    
+    a=A;
+    b=e^B;
  endfunction
  
  % [1,2,3,4]
@@ -136,8 +139,12 @@ function [a,b,c]=aproximacionPorCuadratica(x,y)
    matrix_constantes = [sumatoria_Y,sumatoria_x_y];
    
    matrix_resultante=matrix_constantes/matrix_coeficientes;
-   a=matrix_resultante(1,2);
-   b=matrix_resultante(1,1);
+   A=matrix_resultante(1,2);
+   B=matrix_resultante(1,1);
+ 
+  a=1/A;
+  b=B*A;
+ 
  endfunction
  
  function mostrarFuncionAproximante(a,b,c,funcionAproximante)
