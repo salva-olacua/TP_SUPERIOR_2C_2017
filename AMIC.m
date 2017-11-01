@@ -74,10 +74,10 @@ function [a,b,c]=aproximacionPorCuadratica(x,y)
                          sumatoria_x,sumatoria_x_al_cuadrado,sumatoria_x_al_cubo;
                          sumatoria_x_al_cuadrado,sumatoria_x_al_cubo,sumatoria_x_a_la_cuarta];
   matrix_constantes = [sumatoria_y,sumatoria_x_y,sumatoria_x_al_cuadrado_y];
-  matrix_resultante = matrix_coeficientes / matrix_constantes;
+  matrix_resultante = matrix_constantes/matrix_coeficientes;
   
-  a=matrix_resultante(3,1);
-  b=matrix_resultante(2,1);
+  a=matrix_resultante(1,3);
+  b=matrix_resultante(1,2);
   c=matrix_resultante(1,1);
   
  endfunction
@@ -100,13 +100,44 @@ function [a,b,c]=aproximacionPorCuadratica(x,y)
  
  endfunction  
 
+ %[1,1.2,2,2.5,2.9]
+ %[2.6,3.8,5.2,7.1,8]
+ 
  function [a,b]=aproximacionPorPotencial(x,y)
-   
+    sumatoria_logx=sum(log(x));
+    sumatoria_logy=sum(log(y));
+    
+    sumatoria_logx_logy=sum(log(x).*log(y));
+    sumatoria_logx_al_cuadrado=sum(log(x).^2);
+    cantidad_x = length(x);
+    
+    matrix_coeficientes=[sumatoria_logx_al_cuadrado,sumatoria_logx;sumatoria_logx,cantidad_x];
+    matrix_constantes=[sumatoria_logx_logy,sumatoria_logy];
+    
+    matrix_resultante= matrix_constantes / matrix_coeficientes;
+    
+    a=matrix_resultante(1,1);
+    b=matrix_resultante(1,2);
+    
+    
  endfunction
  
- 
+ % [1,2,3,4]
+ % [4,5,8,15]
  function [a,b]=aproximacionPorHiperbola(x,y)
+   sumatoria_x = sum(x);
+   cantidad_x = length(x);
+   sumatoria_Y = sum(1./y); 
+   sumatoria_x_al_cuadrado = sum(x.^2);
+   sumatoria_x_y = sum(x.*(1./y));
    
+   
+   matrix_coeficientes = [cantidad_x,sumatoria_x;sumatoria_x,sumatoria_x_al_cuadrado];
+   matrix_constantes = [sumatoria_Y,sumatoria_x_y];
+   
+   matrix_resultante=matrix_constantes/matrix_coeficientes;
+   a=matrix_resultante(1,2);
+   b=matrix_resultante(1,1);
  endfunction
  
  function mostrarFuncionAproximante(a,b,c,funcionAproximante)
@@ -125,6 +156,7 @@ function menuDeOpciones
       case 2
         compararAproximaciones();
       case 3
+        
         break;
     endswitch
  endwhile
