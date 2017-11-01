@@ -55,16 +55,69 @@ function [a,b]=aproximacionPorRecta(x,y)
   
 endfunction
 
+%[1.2,1.8,3.1,4.9,5.7,7.1,8.6,9.8]
+%[4.5,5.9,7.0,7.8,7.2,6.8,4.5,2.7]
+function [a,b,c]=aproximacionPorCuadratica(x,y)
+  
+  sumatoria_x=sum(x);
+  sumatoria_y=sum(y);
+  
+  cantidad_x=length(x);
+  
+  sumatoria_x_al_cuadrado=sum(x.^2);
+  sumatoria_x_al_cubo=sum(x.^3);
+  sumatoria_x_a_la_cuarta=sum(x.^4);
+  sumatoria_x_y = sum(x.*y);
+  sumatoria_x_al_cuadrado_y = sum((x.^2).*y);  
+  
+  matrix_coeficientes = [cantidad_x,sumatoria_x,sumatoria_x_al_cuadrado;
+                         sumatoria_x,sumatoria_x_al_cuadrado,sumatoria_x_al_cubo;
+                         sumatoria_x_al_cuadrado,sumatoria_x_al_cubo,sumatoria_x_a_la_cuarta];
+  matrix_constantes = [sumatoria_y,sumatoria_x_y,sumatoria_x_al_cuadrado_y];
+  matrix_resultante = matrix_coeficientes / matrix_constantes;
+  
+  a=matrix_resultante(3,1);
+  b=matrix_resultante(2,1);
+  c=matrix_resultante(1,1);
+  
+ endfunction
+ 
+ 
+ %[1,1.25,1.5,1.75,2]
+ %[5.1,5.79,6.53,7.45,8.46]
+ function [a,b]=aproximacionPorExponencial(x,y)
+   sumatoria_x=sum(x);
+   sumatoria_lny=sum(log(y));
+   cantidad_x = length(x);
+   sumatoria_x_al_cuadrado=sum(x.^2);
+   sumatoria_x_lny = sum(x.*log(y));
+ 
+  matrix_coeficientes = [sumatoria_x_al_cuadrado,sumatoria_x;sumatoria_x,cantidad_x];
+  matrix_constantes = [sumatoria_x_lny,sumatoria_lny];
+ matrix_resultante= matrix_constantes / matrix_coeficientes;
+  a=matrix_resultante(1,1);
+  b=matrix_resultante(1,2);
+ 
+ endfunction  
 
-
-function mostrarFuncionAproximante(a,b,funcionAproximante)
-  msgbox({funcionAproximante strcat("a= ",num2str(a)) strcat("b= ",num2str(b)) });
+ function [a,b]=aproximacionPorPotencial(x,y)
+   
+ endfunction
+ 
+ 
+ function [a,b]=aproximacionPorHiperbola(x,y)
+   
+ endfunction
+ 
+ function mostrarFuncionAproximante(a,b,c,funcionAproximante)
+  msgbox({funcionAproximante strcat("a= ",num2str(a)) strcat("b= ",num2str(b)) strcat("c= ",num2str(c))});
 endfunction
 
 
 function menuDeOpciones
  while(true)
-  opcion = menu ("menu de opciones", "Cargar Datos", "Comparar Aproximaciones","Finalizar");
+  
+  opcion = listdlg ("Name","AMIC","ListSize", [500,500],"ListString",{"Cargar Datos", "Comparar Aproximaciones","Finalizar"},"SelectionMode","Single");
     switch (opcion)
       case 1
         [x,y,cant_decimales]=cargarDatos();
@@ -90,16 +143,19 @@ endfunction
 
 
 
-function menuDeOpcionesPorAproximacion(x,y,a,b,grafica)
+function menuDeOpcionesPorAproximacion(x,y,a,b,c,grafica)
   while(true)
-  opcion = menu ("menu de interaccion por aproximacion elegida",
-                 "Mostrar la funcion aproximante",
-                 "Obtener el detalle del calculo",
-                 "Visualizar grafica",
-                 "Volver al menu de aproximacion");
+  
+   opcion = listdlg("Name"      ,"Menu de interaccion por aproximacion elegida",
+                    "ListSize"  ,[500,500],
+                    "ListString",{"Mostrar la funcion aproximante",
+                                  "Obtener el detalle del calculo",
+                                  "Visualizar grafica",
+                                  "Volver al menu de aproximacion"},
+                    "SelectionMode","Single");
     switch (opcion)
       case 1
-        mostrarFuncionAproximante(a,b,grafica);
+        mostrarFuncionAproximante(a,b,c,grafica);
       case 2
         detalleDelCalculo();
       case 3
@@ -114,27 +170,42 @@ endfunction
 
 function menuDeAproximaciones(x,y,cant_decimales)  
 while(true)
-  opcion = menu ("Aproximar mediante: ",
-    "1. Recta de mínimos cuadrados: y = ax+b.",
-    "2. Parábola de mínimos cuadrados: y = ax^2+bx+c.",
-    "3. Aproximación Exponencial: y = be^ax.",
-    "4. Aproximación Potencial: y = bx^a .",
-    "5. Aproximación Hipérbola: y = a/x+b .",
-    "6. Volver al menu de opciones .");
+  opcion = listdlg ("Name","Aproximar mediante: ",
+                    "ListSize",[500,500],
+                    "ListString",{"1. Recta de minimos cuadrados: y = ax+b.",
+                                  "2. Parabola de minimos cuadrados: y = ax^2+bx+c.",
+                                  "3. Aproximacion Exponencial: y = be^ax.",
+                                  "4. Aproximacion Potencial: y = bx^a .",
+                                  "5. Aproximacion Hiperbola: y = a/x+b .",
+                                  "6. Volver al menu de opciones ."},
+                    "SelectionMode","Single");
   switch (opcion)
     case 1
      [a,b]=aproximacionPorRecta(x,y);
      recta="y=mx+b";
-     menuDeOpcionesPorAproximacion(x,y,a,b,recta);
+     c=0;
+     menuDeOpcionesPorAproximacion(x,y,a,b,c,recta);
     case 2
-     opcion2();
+      [a,b,c]=aproximacionPorCuadratica(x,y);
+      parabola="y=ax^2+bx+c";
+      menuDeOpcionesPorAproximacion(x,y,a,b,c,parabola);
     case 3
-     opcion3();
+      [a,b]=aproximacionPorExponencial(x,y);
+      exponencial = "y = be^ax";
+      c=0;
+      menuDeOpcionesPorAproximacion(x,y,a,b,c,exponencial);
     case 4
-     opcion4();
+      [a,b]=aproximacionPorPotencial(x,y);
+      potencial = "y = bx^a";
+      c=0;
+      menuDeOpcionesPorAproximacion(x,y,a,b,c,potencial);
     case 5
-     opcion5();
+      [a,b]=aproximacionPorHiperbola(x,y);
+      hiperbola = "y = a/x+b";
+      c=0;
+      menuDeOpcionesPorAproximacion(x,y,a,b,c,hiperbola);
     case 6
+      menuDeOpciones();
      break;
   endswitch
 endwhile
