@@ -181,13 +181,24 @@ endfunction
 
 
 
-function visualizarGrafica(x,y,a,b)
-  plot(x, y,'r*');
-  puntos_a_evaluar = linspace(1,4,20);
-  recta_de_aproximacion=polyval([a b],puntos_a_evaluar);
-  hold on
-  plot(puntos_a_evaluar,recta_de_aproximacion,'m-.');
-  hold off
+function visualizarGrafica(x,y,a,b,c,grafica)
+  z = linspace(min(x), max(x), 100);
+  switch(grafica)
+    case 1
+      recta_de_aproximacion= a.*z + b;
+    case 2
+      recta_de_aproximacion = a.*z.^2 + b.*z + c;
+    case 3
+      recta_de_aproximacion = b.*(e.^(a.*z));
+    case 4
+      recta_de_aproximacion = b.*(z.^a);
+    case 5
+      recta_de_aproximacion = a./(b.+z);
+ endswitch
+ plot(x, y,'r*');
+ hold on
+ plot(z,recta_de_aproximacion,'m-.');
+ hold off
 endfunction
 
 
@@ -403,7 +414,7 @@ function menuDeOpcionesPorAproximacion(x,y,a,b,c, ecuacion, cant_decimales, graf
       case 2
         detalleDelCalculo(x,y,grafica, cant_decimales);
       case 3
-        visualizarGrafica(x,y,a,b);
+        visualizarGrafica(x,y,a,b,c,grafica);
       case 4
         break;
     endswitch
