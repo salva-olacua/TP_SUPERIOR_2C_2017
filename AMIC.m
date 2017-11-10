@@ -306,7 +306,7 @@ function compararAproximaciones
 endfunction
 
 function detalleDelCalculo(x,y,grafica, cant_decimales)
-   msgbox(disp(cant_decimales));
+   msgbox("Cantidad de Decimales: ", disp(cant_decimales));
    switch(grafica)
     case 1
       A = [sum(x.^2), sum(x) ; sum(x) , length(x)];
