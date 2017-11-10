@@ -26,6 +26,13 @@ endfunction
 
 
 
+function [a] = redondeo(numero, decimales)
+  valor_Decimales = 10.^decimales;
+  a = round(numero * valor_Decimales)/ valor_Decimales;
+    endfunction
+
+
+    
 function [a,b]=aproximacionPorRecta(x,y)
   sumatoria_x=sum(x);
   sumatoria_y=sum(y);
@@ -147,8 +154,11 @@ function [a,b,c]=aproximacionPorCuadratica(x,y)
  
  endfunction
  
- function mostrarFuncionAproximante(a,b,c,funcionAproximante)
-  msgbox({funcionAproximante strcat("a= ",num2str(a)) strcat("b= ",num2str(b)) strcat("c= ",num2str(c))});
+ function mostrarFuncionAproximante(a,b,c, ecuacion, cant_decimales)
+  a = redondeo(a, cant_decimales);
+  b = redondeo(b, cant_decimales);
+  c = redondeo(c, cant_decimales);
+  msgbox({ecuacion strcat("a= ", num2str(a)) strcat("b= ", num2str(b)) strcat("c= ", num2str(c))});
 endfunction
 
 
@@ -228,7 +238,7 @@ function error = errorDelModelo(x,y,modelo)
 function c = errorMasChico(x,y)
   a = errorDelModelo(x,y,1);
   b = 1;
- for i=2:4
+ for i=2:5
    if(a > errorDelModelo(x,y,i))
     a = errorDelModelo(x,y,i);
     b = i; 
@@ -243,6 +253,8 @@ function c = errorMasChico(x,y)
    c = "Aproximacion Exponencial ";
  case 4
    c = "Aproximacion Potencial ";
+  case 5
+    c = "Aproximacion Hiperbola";
  otherwise
  msgbox("Error al elegir el error mas chico");
  endswitch
@@ -258,61 +270,63 @@ function compararAproximaciones
      expresionX = "Xi =";
      expresionY = "Yi =";
      expresionFinal = "_";
+   
      
       for i=1:length(x)
-      expresionX = strcat(expresionX,num2str(x(i))," |");
+      expresionX = strcat(expresionX,num2str(redondeo(x(i), cant_decimales))," |");
       endfor
-      expresionX = strcat(expresionX, "sumatoria = ",num2str(sum(x)), "\n\n");
+      expresionX = strcat(expresionX, "sumatoria = ",num2str(redondeo(sum(x), cant_decimales)), "\n\n");
   
       for i=1:length(y)
-      expresionY = strcat(expresionY," ",num2str(y(i))," |");
+      expresionY = strcat(expresionY," ",num2str(redondeo(y(i), cant_decimales))," |");
       endfor
-      expresionY = strcat(expresionY, "sumatoria = ",num2str(sum(y)), "\n");
+      expresionY = strcat(expresionY, "sumatoria = ",num2str(redondeo(sum(y), cant_decimales)), "\n");
       
       expresionFinal = strcat("Datos: \n\n",expresionX,expresionY,"\n\nModelo Aproximante:\n\n",
-      "Recta (y=ax+b) - Error = |", num2str(errorDelModelo(x,y,1)), "|\n",
-      "Cuadratica (y=ax^2+bx+c) - Error = |", num2str(errorDelModelo(x,y,2)), "|\n",
-      "Exponencial (y=b(e^ax)) - Error = |", num2str(errorDelModelo(x,y,3)), "|\n",
-      "Potencial (y=bx^a) - Error = |", num2str(errorDelModelo(x,y,4)), "|\n",
-      "Hiperbola (y=a/(x+b)) - Error = |", num2str(errorDelModelo(x,y,5)), "|\n\n",
+      "Recta (y=ax+b) - Error = |", num2str(redondeo(errorDelModelo(x,y,1), cant_decimales)), "|\n",
+      "Cuadratica (y=ax^2+bx+c) - Error = |", num2str(redondeo(errorDelModelo(x,y,2), cant_decimales)), "|\n",
+      "Exponencial (y=b(e^ax)) - Error = |", num2str(redondeo(errorDelModelo(x,y,3), cant_decimales)), "|\n",
+      "Potencial (y=bx^a) - Error = |", num2str(redondeo(errorDelModelo(x,y,4), cant_decimales)), "|\n",
+      "Hiperbola (y=a/(x+b)) - Error = |", num2str(redondeo(errorDelModelo(x,y,5), cant_decimales)), "|\n\n",
       "Modelo que mejor aproxima la funcion: ",errorMasChico(x,y));
       
       msgbox(expresionFinal);
       
 endfunction
 
-function detalleDelCalculo(x,y,grafica)
-  switch(grafica)
+function detalleDelCalculo(x,y,grafica, cant_decimales)
+   switch(grafica)
     case 1
       A = [sum(x.^2), sum(x) ; sum(x) , length(x)];
       B = inverse(A);
       C = [sum(x.*y); sum(y)];
       D = B*C;
-      string = strcat("y = ax+b \nTabla de Sumatorias \n\nSumatoria de X: ", disp(sum(x)), 
-                    "Sumatoria de Y: ", disp(sum(y)), 
-                    "Sumatoria de X^2: ", disp(sum(x.^2)),
-                    "Sumatoria de X*Y: ", disp(sum(x.*y)),
-                    "\nMatriz de Coeficientes: \n", disp(A),
-                    "\nMatriz Inversa: \n", disp(B),
-                    "\nMatriz de Terminos Independientes: \n", disp(C),
-                    "\nMatriz de Resultados: \n",disp(D));
+  
+     string = strcat("y = ax+b \nTabla de Sumatorias \n\nSumatoria de X: ", disp(redondeo(sum(x), cant_decimales)), 
+                    "Sumatoria de Y: ", disp(redondeo(sum(y), cant_decimales)), 
+                    "Sumatoria de X^2: ", disp(redondeo(sum(x.^2), cant_decimales)),
+                    "Sumatoria de X*Y: ", disp(redondeo(sum(x.*y), cant_decimales)),
+                    "\nMatriz de Coeficientes: \n", disp(redondeo(A, cant_decimales)),
+                    "\nMatriz Inversa: \n", disp(redondeo(B, cant_decimales)),
+                    "\nMatriz de Terminos Independientes: \n", disp(redondeo(C, cant_decimales)),
+                    "\nMatriz de Resultados: \n",disp(redondeo(D, cant_decimales)));
       msgbox(disp(string));
      case 2
        A = [sum(x.^4), sum(x.^3), sum(x.^2) ; sum(x.^3), sum(x.^2), sum(x) ; sum(x.^2), sum(x), length(x)];
        B = inverse(A);
        C = [sum((x.^2).*y) ; sum(x.*y) ; sum(y)]
        D = B*C;
-       string = strcat("y = ax^2+bx+c \nTabla de Sumatorias \n\nSumatoria de X: ", disp(sum(x)), 
-                    "Sumatoria de Y: ", disp(sum(y)), 
-                    "Sumatoria de X^2: ", disp(sum(x.^2)),
-                    "Sumatoria de X^3: ", disp(sum(x.^3)),
-                    "Sumatoria de X^4: ", disp(sum(x.^4)),
-                    "Sumatoria de X*Y: ", disp(sum(x.*y)),
-                    "Sumatoria de X^2*Y: ", disp(sum((x.^2).*y)),
-                    "\nMatriz de Coeficientes: \n", disp(A),
-                    "\nMatriz Inversa: \n", disp(B),
-                    "\nMatriz de Terminos Independientes: \n", disp(C),
-                    "\nMatriz de Resultados: \n", disp(D));
+       string = strcat("y = ax^2+bx+c \nTabla de Sumatorias \n\nSumatoria de X: ", disp(redondeo(sum(x), cant_decimales)), 
+                    "Sumatoria de Y: ", disp(redondeo(sum(y), cant_decimales)), 
+                    "Sumatoria de X^2: ", disp(redondeo(sum(x.^2), cant_decimales)),
+                    "Sumatoria de X^3: ", disp(redondeo(sum(x.^3), cant_decimales)),
+                    "Sumatoria de X^4: ", disp(redondeo(sum(x.^4), cant_decimales)),
+                    "Sumatoria de X*Y: ", disp(redondeo(sum(x.*y), cant_decimales)),
+                    "Sumatoria de X^2*Y: ", disp(redondeo(sum((x.^2).*y), cant_decimales)),
+                    "\nMatriz de Coeficientes: \n", disp(redondeo(A, cant_decimales)),
+                    "\nMatriz Inversa: \n", disp(redondeo(B, cant_decimales)),
+                    "\nMatriz de Terminos Independientes: \n", disp(redondeo(C, cant_decimales)),
+                    "\nMatriz de Resultados: \n", disp(redondeo(D, cant_decimales)));
       msgbox(disp(string));
     case 3
       A = [sum(x.^2), sum(x) ; sum(x) , length(x)];
@@ -320,15 +334,15 @@ function detalleDelCalculo(x,y,grafica)
       C = [sum(x.*(log(y))); sum(log(y))];
       D = B*C;
       D(2,1) = exp(D(2,1));
-      string = strcat("y = be^ax \nTabla de Sumatorias \n\nSumatoria de X: ", disp(sum(x)), 
-                    "Sumatoria de Y: ", disp(sum(y)), 
-                    "Sumatoria de X^2: ", disp(sum(x.^2)),
-                    "Sumatoria de Ln(Y): ", disp(sum(log(y))),
-                    "Sumatoria de X*Ln(Y): ", disp(sum(x.*(log(y)))),
-                    "\nMatriz de Coeficientes: \n", disp(A),
-                    "\nMatriz Inversa: \n", disp(B),
-                    "\nMatriz de Terminos Independientes: \n", disp(C),
-                    "\nMatriz de Resultados: \n",disp(D));
+      string = strcat("y = be^ax \nTabla de Sumatorias \n\nSumatoria de X: ", disp(redondeo(sum(x), cant_decimales)), 
+                    "Sumatoria de Y: ", disp(redondeo(sum(y), cant_decimales)), 
+                    "Sumatoria de X^2: ", disp(redondeo(sum(x.^2), cant_decimales)),
+                    "Sumatoria de Ln(Y): ", disp(redondeo(sum(log(y)), cant_decimales)),
+                    "Sumatoria de X*Ln(Y): ", disp(redondeo(sum(x.*(log(y))), cant_decimales)),
+                    "\nMatriz de Coeficientes: \n", disp(redondeo(A, cant_decimales)),
+                    "\nMatriz Inversa: \n", disp(redondeo(B, cant_decimales)),
+                    "\nMatriz de Terminos Independientes: \n", disp(redondeo(C, cant_decimales)),
+                    "\nMatriz de Resultados: \n",disp(redondeo(D, cant_decimales)));
       msgbox(disp(string));
     case 4
       X = log(x);
@@ -338,15 +352,15 @@ function detalleDelCalculo(x,y,grafica)
       C = [sum(X.*Y); sum(Y)];
       D = B*C;
       D(2,1) = exp(D(2,1));
-      string = strcat("y = bx^a \nTabla de Sumatorias \n\nSumatoria de X: ", disp(sum(x)), 
-                    "Sumatoria de Y: ", disp(sum(y)), 
-                    "Sumatoria de (Ln(X))^2: ", disp(sum(X.^2)),
-                    "Sumatoria de Ln(Y): ", disp(sum(Y)),
-                    "Sumatoria de Ln(X)*Ln(Y): ", disp(sum(X.*Y)),
-                    "\nMatriz de Coeficientes: \n", disp(A),
-                    "\nMatriz Inversa: \n", disp(B),
-                    "\nMatriz de Terminos Independientes: \n", disp(C),
-                    "\nMatriz de Resultados: \n",disp(D));
+      string = strcat("y = bx^a \nTabla de Sumatorias \n\nSumatoria de X: ", disp(redondeo(sum(x), cant_decimales)), 
+                    "Sumatoria de Y: ", disp(redondeo(sum(y), cant_decimales)), 
+                    "Sumatoria de (Ln(X))^2: ", disp(redondeo(sum(X.^2), cant_decimales)),
+                    "Sumatoria de Ln(Y): ", disp(redondeo(sum(Y), cant_decimales)),
+                    "Sumatoria de Ln(X)*Ln(Y): ", disp(redondeo(sum(X.*Y), cant_decimales)),
+                    "\nMatriz de Coeficientes: \n", disp(redondeo(A, cant_decimales)),
+                    "\nMatriz Inversa: \n", disp(redondeo(B, cant_decimales)),
+                    "\nMatriz de Terminos Independientes: \n", disp(redondeo(C, cant_decimales)),
+                    "\nMatriz de Resultados: \n",disp(redondeo(D, cant_decimales)));
       msgbox(disp(string));
     case 5
       Y = 1./y;
@@ -356,16 +370,16 @@ function detalleDelCalculo(x,y,grafica)
       D = B*C;
       D(1,1) = 1/(D(1,1));
       D(2,1) = D(1,1)*(D(2,1));
-      string = strcat("y = a/(b+x) \nTabla de Sumatorias \n\nSumatoria de X: ", disp(sum(x)), 
-                    "disp(Y): ", disp(Y),
-                    "Sumatoria de Y: ", disp(sum(y)), 
-                    "Sumatoria de X^2: ", disp(sum(x.^2)),
-                    "Sumatoria de 1/Y: ", disp(sum(Y)),
-                    "Sumatoria de X*1/Y: ", disp(sum(x.*Y)),
-                    "\nMatriz de Coeficientes: \n", disp(A),
-                    "\nMatriz Inversa: \n", disp(B),
-                    "\nMatriz de Terminos Independientes: \n", disp(C),
-                    "\nMatriz de Resultados: \n",disp(D));
+      string = strcat("y = a/(b+x) \nTabla de Sumatorias \n\nSumatoria de X: ", disp(redondeo()sum(x), cant_decimales), 
+                    "disp(Y): ", disp(redondeo(Y, cant_decimales)),
+                    "Sumatoria de Y: ", disp(redondeo(sum(y), cant_decimales)), 
+                    "Sumatoria de X^2: ", disp(redondeo(sum(x.^2), cant_decimales)),
+                    "Sumatoria de 1/Y: ", disp(redondeo(sum(Y), cant_decimales)),
+                    "Sumatoria de X*1/Y: ", disp(redondeo(sum(x.*Y), cant_decimales)),
+                    "\nMatriz de Coeficientes: \n", disp(redondeo(A, cant_decimales)),
+                    "\nMatriz Inversa: \n", disp(redondeo(B, cant_decimales)),
+                    "\nMatriz de Terminos Independientes: \n", disp(redondeo(C, cant_decimales)),
+                    "\nMatriz de Resultados: \n",disp(redondeo(D, cant_decimales)));
       msgbox(disp(string));
        
   endswitch
@@ -373,7 +387,7 @@ function detalleDelCalculo(x,y,grafica)
 endfunction
 
 
-function menuDeOpcionesPorAproximacion(x,y,a,b,c,grafica)
+function menuDeOpcionesPorAproximacion(x,y,a,b,c, ecuacion, cant_decimales, grafica)
   while(true)
   
    opcion = listdlg("Name"      ,"Menu de interaccion por aproximacion elegida",
@@ -385,9 +399,9 @@ function menuDeOpcionesPorAproximacion(x,y,a,b,c,grafica)
                     "SelectionMode","Single");
     switch (opcion)
       case 1
-        mostrarFuncionAproximante(a,b,c,grafica);
+        mostrarFuncionAproximante(a,b,c, ecuacion, cant_decimales);
       case 2
-        detalleDelCalculo(x,y,grafica);
+        detalleDelCalculo(x,y,grafica, cant_decimales);
       case 3
         visualizarGrafica(x,y,a,b);
       case 4
@@ -412,28 +426,28 @@ while(true)
   switch (opcion)
     case 1
      [a,b]=aproximacionPorRecta(x,y);
-     recta="y=mx+b";
+     recta="y=ax+b";
      c=0;
-     menuDeOpcionesPorAproximacion(x,y,a,b,c,1);
+     menuDeOpcionesPorAproximacion(x,y,a,b,c,recta, cant_decimales, 1);
     case 2
       [a,b,c]=aproximacionPorCuadratica(x,y);
       parabola="y=ax^2+bx+c";
-      menuDeOpcionesPorAproximacion(x,y,a,b,c,2);
+      menuDeOpcionesPorAproximacion(x,y,a,b,c, parabola, cant_decimales, 2);
     case 3
       [a,b]=aproximacionPorExponencial(x,y);
       exponencial = "y = be^ax";
       c=0;
-      menuDeOpcionesPorAproximacion(x,y,a,b,c,3);
+      menuDeOpcionesPorAproximacion(x,y,a,b,c,exponencial, cant_decimales, 3);
     case 4
       [a,b]=aproximacionPorPotencial(x,y);
       potencial = "y = bx^a";
       c=0;
-      menuDeOpcionesPorAproximacion(x,y,a,b,c,4);
+      menuDeOpcionesPorAproximacion(x,y,a,b,c, potencial, cant_decimales, 4);
     case 5
       [a,b]=aproximacionPorHiperbola(x,y);
       hiperbola = "y = a/(x+b)";
       c=0;
-      menuDeOpcionesPorAproximacion(x,y,a,b,c,5);
+      menuDeOpcionesPorAproximacion(x,y,a,b,c, hiperbola, cant_decimales, 5);
     case 6
       menuDeOpciones();
      break;
