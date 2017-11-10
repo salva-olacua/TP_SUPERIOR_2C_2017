@@ -381,8 +381,7 @@ function detalleDelCalculo(x,y,grafica, cant_decimales)
       D = B*C;
       D(1,1) = 1/(D(1,1));
       D(2,1) = D(1,1)*(D(2,1));
-      string = strcat("y = a/(b+x) \nTabla de Sumatorias \n\nSumatoria de X: ", disp(redondeo()sum(x), cant_decimales), 
-                    "disp(Y): ", disp(redondeo(Y, cant_decimales)),
+      string = strcat("y = a/(b+x) \nTabla de Sumatorias \n\nSumatoria de X: ", disp(redondeo()sum(x), cant_decimales),
                     "Sumatoria de Y: ", disp(redondeo(sum(y), cant_decimales)), 
                     "Sumatoria de X^2: ", disp(redondeo(sum(x.^2), cant_decimales)),
                     "Sumatoria de 1/Y: ", disp(redondeo(sum(Y), cant_decimales)),
